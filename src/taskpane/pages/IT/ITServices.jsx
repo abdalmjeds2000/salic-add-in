@@ -24,7 +24,12 @@ const ITServices = () => {
           onFinish={onFinish}
           onFinishFailed={() => message.error("Please, fill all required fields.")}
         >
-          <Form.Item name="Subject" label="Subject" rules={[{ required: true }]}>
+          <Form.Item
+            name="Subject"
+            label="Subject"
+            rules={[{ required: true }]}
+            initialValue={Office.context?.mailbox?.item?.subject}
+          >
             <Input size="large" placeholder="write breif subject" />
           </Form.Item>
           <Form.Item name="IssueType" label="Issue Type">
