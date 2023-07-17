@@ -6,6 +6,7 @@ import { ConfigProvider, Layout } from "antd";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 const { Header, Footer, Content } = Layout;
 
+
 const AppRoutes = () => {
   return (
     <Switch>
