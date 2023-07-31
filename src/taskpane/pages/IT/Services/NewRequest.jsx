@@ -44,7 +44,6 @@ const NewRequest = () => {
     data["emailAttachments"] = emailAttachments;
     setEmailData(data);
   };
-
   React.useEffect(() => {
     fetchEmailData();
   }, []);
