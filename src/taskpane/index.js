@@ -1,4 +1,4 @@
-import App from "./App";
+import AuthWrapper from "./AuthWrapper";
 import { AppContainer } from "react-hot-loader";
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import * as React from "react";
@@ -25,15 +25,15 @@ const render = (Component) => {
 /* Render application after Office initializes */
 Office.onReady(() => {
   isOfficeInitialized = true;
-  render(App);
+  render(AuthWrapper);
 });
 
 /* Initial render showing a progress bar */
-render(App);
+render(AuthWrapper);
 
 if (module.hot) {
-  module.hot.accept("./App", () => {
-    const NextApp = require("./App").default;
+  module.hot.accept("./AuthWrapper", () => {
+    const NextApp = require("./AuthWrapper").default;
     render(NextApp);
   });
 }

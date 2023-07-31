@@ -6,21 +6,49 @@ body {
 
 
 
-.home .services-container {
+.app-loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width:80px;
+  height:20px;
+  background: radial-gradient(circle closest-side,#0C508C 90%,#0000) 0 0/33% 100% space;
+  clip-path: inset(0 100% 0 0);
+  animation:d1 1s steps(4) infinite;
+}
+
+
+@keyframes d1 {to{clip-path: inset(0 -34% 0 0)}}
+
+.world-img-bg {
+  width: 100vh;
+  position: fixed;
+  top: 85px;
+  right: -60vh;
+  opacity: 0.07;
+  z-index: 0;
+  pointer-events: none;
+  animation: spin 200s linear infinite;
+}
+
+
+
+
+.services-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: 0px;
+  grid-template-columns: repeat(auto-fill,minmax(270px,1fr));
+  gap: 15px 25px;
 }
-.home .services-container .service-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 5px;
+
+
+
+.it_issue-types_subform {
+  padding: 0px;
+  border-radius: 0 0 10px 10px;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease-in-out;
-}
-.home .services-container .service-item:hover {
-  font-weight: 500;
-  box-shadow: 0 5px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  top: -24px;
+  position: relative;
+  margin: 0 8px;
 }

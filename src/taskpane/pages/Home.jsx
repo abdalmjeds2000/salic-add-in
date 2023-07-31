@@ -1,26 +1,14 @@
 import * as React from "react";
-import { Link, useHistory } from "react-router-dom";
 import { FiSettings } from "react-icons/fi";
-import { Breadcrumb, Space, Typography } from "antd";
+import { Space } from "antd";
+import ServiceLabel from "../components/ServiceLabel";
 
 const Home = () => {
-  const history = useHistory();
-
   return (
-    <div className="home">
-      <header style={{ marginBottom: 25 }}>
-        <Breadcrumb items={[{ title: "Home" }]} />
-      </header>
-
+    <div id="home_page">
       <div>
-        <Typography.Title level={2}>Choose a service</Typography.Title>
-        <Space direction="vertical" size="large" className="services-container">
-          <Link to="/it" style={{ textDecoration: "none" }} className="service-item">
-            <Space>
-              <FiSettings size={18} />
-              <Typography.Text>New IT Service Request</Typography.Text>
-            </Space>
-          </Link>
+        <Space direction="vertical" size="middle" className="services-container">
+          <ServiceLabel label="IT Service Center" icon={<FiSettings size={18} />} to="/it" color="#897ed4" />
         </Space>
       </div>
     </div>

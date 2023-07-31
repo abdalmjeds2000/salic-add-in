@@ -4,13 +4,14 @@
   <Version>1.0.0.0</Version>
   <ProviderName>SALIC</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="salic-add-in"/>
+  <DisplayName DefaultValue="SALIC Hot Links"/>
   <Description DefaultValue="A template to get started."/>
-  <IconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
-  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-128.png"/>
+  <IconUrl DefaultValue="https://localhost:3000/assets/salic-icon.png"/>
+  <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/salic-icon.png"/>
   <SupportUrl DefaultValue="https://www.contoso.com/help"/>
   <AppDomains>
     <AppDomain>https://www.contoso.com</AppDomain>
+    <AppDomain>https://login.microsoftonline.com</AppDomain>
   </AppDomains>
   <Hosts>
     <Host Name="Mailbox"/>
