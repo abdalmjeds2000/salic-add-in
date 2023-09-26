@@ -1,9 +1,17 @@
+@import 'antd/dist/antd.css';
+
+
+
 body {
-  font-family: 'Arial, Helvetica, sans-serif';
+  /* font-family: 'Arial, Helvetica, sans-serif'; */
   margin: 0;
   padding: 0;
 }
-
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 
 .app-loader {
@@ -24,9 +32,9 @@ body {
 .world-img-bg {
   width: 100vh;
   position: fixed;
-  top: 85px;
+  top: 0px;
   right: -60vh;
-  opacity: 0.07;
+  opacity: 0.05;
   z-index: 0;
   pointer-events: none;
   animation: spin 200s linear infinite;
@@ -51,4 +59,14 @@ body {
   top: -24px;
   position: relative;
   margin: 0 8px;
+}
+
+.ant-table-row.PROCESSING {
+  background: linear-gradient(90deg, #d5ffe6 0%, rgba(255,255,255,1) 100%) !important;
+}
+.ant-table-row.SUBMITTED {
+  background: linear-gradient(90deg,#ffe1e1,#fff) !important;
+}
+.ant-table-row.Waiting_For_Approval {
+  background: linear-gradient(90deg, #fff0db 0%, rgba(255,255,255,1) 100%) !important;
 }

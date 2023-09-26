@@ -26,21 +26,23 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.1.4",
+    "@ant-design/icons": "^4.7.0",
     "@fluentui/react": "^8.52.3",
-    "antd": "^5.7.0",
+    "antd": "^4.24.1",
     "axios": "^1.4.0",
     "core-js": "^3.9.1",
     "css-loader": "^6.8.1",
     "es6-promise": "^4.2.8",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
+    "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.10.1",
     "react-router-dom": "^5.3.4",
+    "react-super-responsive-table": "^5.2.1",
     "regenerator-runtime": "^0.13.7",
-    "salic-react-components": "^0.9.8",
+    "salic-react-components": "^0.9.74",
     "style-loader": "^3.3.3"
   },
   "devDependencies": {

@@ -1,27 +1,22 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { Breadcrumb, Typography } from "antd";
-import axios from "axios";
-import { AuthData } from "../../../AuthWrapper";
+import { AuthData } from "../../../../AuthWrapper";
 import { ITServiceRequestForm } from "salic-react-components";
+import { fetchITServiceRequests } from "../../../../api/it_service_requests";
+import { useHistory } from "react-router-dom";
+import "./styles.css";
 
-const NewRequest = () => {
+const ForwardEmail = () => {
   const { user } = AuthData();
   const [issues, setIssues] = React.useState([]);
   const [emailData, setEmailData] = React.useState({});
+  const history = useHistory();
 
   const fetchIssues = async () => {
-    try {
-      const res_issues = await axios.get(
-        // "https://graph.microsoft.com/v1.0/sites/92458303-f642-487c-8328-6914b90ae9a2/lists/b2f93318-9149-4369-a74f-f3d2029f2ede/items?expand=fields(select=AttachmentFiles,*)"
-        "https://graph.microsoft.com/v1.0/sites/7edaebd4-868c-4eda-9895-6bd7887cb5bc/lists/a4ef4d16-3983-4d9c-833d-a02479bbc1fa/items?expand=fields(select=AttachmentFiles,*)"
-      );
-      setIssues(res_issues.data.value);
-    } catch (error) {
-      console.log(error);
-    }
+    const data = await fetchITServiceRequests();
+    setIssues(data?.value || []);
   };
-
   React.useEffect(() => {
     fetchIssues();
   }, []);
@@ -31,7 +26,7 @@ const NewRequest = () => {
     const emailSubject = Office.context.mailbox.item.subject;
     const emailAttachments = Office.context.mailbox.item.attachments;
     const emailDescription = await new Promise((resolve, reject) => {
-      Office.context.mailbox.item.body.getAsync("text", (result) => {
+      Office.context.mailbox.item.body.getAsync("html", (result) => {
         if (result.status === Office.AsyncResultStatus.Succeeded) {
           resolve(result.value);
         } else {
@@ -52,22 +47,23 @@ const NewRequest = () => {
   return (
     <div>
       <header style={{ marginBottom: 25 }}>
-        <Breadcrumb
-          items={[
-            { title: <Link to="/">Home</Link> },
-            { title: <Link to="/it">IT Service Center</Link> },
-            { title: "IT Service Request" },
-          ]}
-        />
+        <Breadcrumb>
+          <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+          <Breadcrumb.Item><Link to="/it">IT Service Center</Link></Breadcrumb.Item>
+          <Breadcrumb.Item>Forward Email</Breadcrumb.Item>
+        </Breadcrumb>
       </header>
       <div>
-        <Typography.Title level={3}>New IT Service Request</Typography.Title>
+        <Typography.Title level={3}>Forward Email</Typography.Title>
         <ITServiceRequestForm
           listOfIssue={issues.map((issue) => issue.fields)}
           Email={user.user.mail}
+          Source="ADD-IN"
+          afterSubmit={() => history.push("/it")}
+          emailDescription={emailData.emailDescription} // to put it in rich text editor
           initialValues={{
             Subject: emailData.emailSubject,
-            Description: emailData.emailDescription,
+            // Description: emailData.emailDescription, // not necessary, => description is in rich text editor
           }}
         />
       </div>
@@ -75,4 +71,4 @@ const NewRequest = () => {
   );
 };
 
-export default NewRequest;
+export default ForwardEmail;

@@ -1,24 +1,33 @@
+/* eslint-disable prettier/prettier */
 import * as React from "react";
-import { Breadcrumb, Space, Table, Typography, message } from "antd";
+import { Breadcrumb, Pagination, Tag, Typography, message } from "antd";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { AuthData } from "../../../AuthWrapper";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { Table, Thead, Tbody, Tr, Th, Td } from "react-super-responsive-table";
+import "react-super-responsive-table/dist/SuperResponsiveTableStyle.css";
+import { Loader } from "salic-react-components";
 
 const RequestsAssigned = () => {
   const { user, apiUrl } = AuthData();
-  const [data, setData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [data, setData] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
+  const [pagination, setPagination] = React.useState({
+    current: 1,
+    pageSize: 10,
+  });
 
   async function fetchData() {
     try {
       setLoading(true);
+      const start = (pagination.current - 1) * pagination.pageSize;
       const response = await axios.get(
-        `${apiUrl}/tracking/AssignedForMe?User=${user.user.mail}&draw=1&order=Status%20desc&start=0&length=-1&search[value]=&search[regex]=false&query=`
+        // `${apiUrl}/tracking/AssignedForMe?User=${user.user.mail}&draw=1&order=Status%20desc&start=0&length=-1&search[value]=&search[regex]=false&query=`
+        `${apiUrl}/tracking/Get?draw=1&order=Id%20desc&start=${start}&length=${pagination.pageSize}&email=${user.user.mail}`
       );
       console.log(response);
-      setData(response?.data?.Data);
+      setData(response?.data);
     } catch (error) {
       message.error("Failed Load Data!");
     } finally {
@@ -28,90 +37,99 @@ const RequestsAssigned = () => {
 
   React.useEffect(() => {
     fetchData();
-  }, []);
+  }, [pagination]);
 
-  const columns = [
-    {
-      title: "SR. #",
-      dataIndex: "Id",
-      width: "5%",
-      render: (val) => <b>{`SR[#${val}]`}</b>,
-    },
-    {
-      title: "Subject",
-      dataIndex: "Subject",
-      width: "33%",
-      render: (val, record) => (
-        <div style={{ minWidth: 250 }}>
-          <Space direction="horizontal">
-            <InfoCircleOutlined style={{ color: record.Priority === "1" ? "#0c508c" : "#ff272b" }} />
-            <Link to={`/it/${record.Id}`}>{val}</Link>
-          </Space>
-        </div>
-      ),
-    },
-    {
-      title: "Created At",
-      dataIndex: "CreatedAt",
-      width: "12%",
-      render: (val) => <div style={{ minWidth: 140 }}>{moment(val).format("MM/DD/YYYY H:mm A")}</div>,
-    },
-    {
-      title: "Requester",
-      dataIndex: "Requester",
-      width: "16%",
-      render: (val) => <div style={{ minWidth: 100 }}>{val?.DisplayName}</div>,
-    },
-    {
-      title: "Pending With",
-      dataIndex: "PendingWith",
-      width: "16%",
-      render: (val) => <div style={{ minWidth: 100 }}>{val?.DisplayName}</div>,
-    },
-    {
-      title: "Status",
-      dataIndex: "Status",
-      width: "8%",
-      render: (val) => <div style={{ minWidth: 80 }}>{val}</div>,
-    },
-    {
-      title: "Request Type",
-      dataIndex: "RequestType",
-      width: "10%",
-      render: (val) => <div style={{ minWidth: 80 }}>{val}</div>,
-    },
-  ];
+  // const dataFiltered = React.useMemo(() => {
+  //   const start = (pagination.current - 1) * pagination.pageSize;
+  //   const end = pagination.current * pagination.pageSize;
+  //   return data.slice(start, end);
+  // }, [data, pagination]);
+
 
   return (
     <div>
+      {loading && <div style={{ position: "fixed", backgroundColor: "#fff", padding: 20, top: "50%", left: "50%", zIndex: 99, borderRadius: 10, boxShadow: "0 4px 10px #00000011", transform: "translate(-50%, -50%)" }}><Loader /></div>}
       <header style={{ marginBottom: 25 }}>
-        <Breadcrumb
-          items={[
-            { title: <Link to="/">Home</Link> },
-            { title: <Link to="/it">IT Service Center</Link> },
-            { title: "Requests Assigned" },
-          ]}
-        />
+        <Breadcrumb>
+          <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+          <Breadcrumb.Item><Link to="/it">IT Service Center</Link></Breadcrumb.Item>
+          <Breadcrumb.Item>Requests Assigned</Breadcrumb.Item>
+        </Breadcrumb>
       </header>
       <div>
         <Typography.Title level={3}>Requests Assigned to Me</Typography.Title>
 
-        <Table
-          columns={columns}
-          dataSource={data}
-          loading={loading}
-          style={{ backgroundColor: "#fff", overflowX: "auto" }}
-          rowClassName={(record) =>
-            record.Status === "PROCESSING"
-              ? "PROCESSING"
-              : record.Status === "Waiting For Approval"
-              ? "Waiting_For_Approval"
-              : record.Status === "SUBMITTED"
-              ? "SUBMITTED"
-              : ""
+        <Table>
+          <Thead>
+            <Tr>
+              {/* <Th>SR. #</Th> */}
+              <Th>Subject</Th>
+              <Th>Created At</Th>
+              <Th>Requester</Th>
+              {/* <Th>Pending With</Th> */}
+              <Th>Status</Th>
+              <Th>Request Type</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {
+              data?.data?.map((item, index) => {
+                return (
+                  <Tr key={index}>
+                    {/* <Td><Tag>#{item?.Id}</Tag></Td> */}
+                    <Td><Link to={`/it/preview/${item?.Id}`}>#{item?.Id} :: {item?.Subject}</Link></Td>
+                    <Td>{moment(item?.CreatedAt).format("MM/DD/YYYY H:mm A")}</Td>
+                    <Td><Typography.Link href={`https://eur.delve.office.com/?p=${item?.Requester.Mail}` || " - "} target="_blank" style={{color:"#000"}}>{item?.Requester.DisplayName}</Typography.Link></Td>
+                    {/* <Td>{item?.PendingWith?.DisplayName || " - "}</Td> */}
+                    <Td><Tag color={item.Status === "Waiting For Approval" ? "orange" : item.Status === "SUBMITTED" ? "red" : item.Status === "PROCESSING" ? "green" : "blue"}>{item?.Status}</Tag></Td>
+                    <Td>{item?.RequestType || " - "}</Td>
+                  </Tr>
+                )
+              })
+            }
+          </Tbody>
+        </Table>
+        {data?.data?.length > 0 && <Pagination
+          current={pagination.current}
+          total={data?.recordsTotal || 0}
+          pageSize={pagination.pageSize}
+          style={{ textAlign: "center" }}
+          disabled={loading}
+          showSizeChanger
+          onChange={
+            (page, pageSize) => {
+              setPagination({ ...pagination, current: page, pageSize: pageSize });
+            }
           }
-        />
+        />}
       </div>
+      <style jsx>
+        {`
+          table {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid #f4f4f4;
+            margin-bottom: 25px;
+          }
+          th {
+            background-color: #f4f4f4;
+            padding: 20px 0 !important;
+            color: #434343;
+          }
+          th, td {
+            text-align: left;
+            padding: 8px;
+          }
+          tr:nth-child(even) {background-color: #f8f8f8;}
+          tr:nth-child(odd) {background-color: #ffffff;}
+          tr {
+            border: 1px solid #f4f4f4 !important;
+          }
+          tr:hover {
+            background-color: #f4f4f4;
+          }
+        `}
+      </style>
     </div>
   );
 };

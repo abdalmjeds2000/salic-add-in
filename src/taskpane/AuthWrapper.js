@@ -6,23 +6,23 @@ import App from "./App";
 import { LoadingOutlined } from "@ant-design/icons";
 import logo from "/assets/Salic_centered_logo-01.png";
 
-// const apiUrl = "https://salicapi.com/api";
-const apiUrl = "https://dev.salic.com/api";
-const deployment_url = "https://localhost:3000";
-// const deployment_url = "https://salic-outlook-add-ins-dev.netlify.app";
+const apiUrl = "https://salicapi.com/api";
+// const apiUrl = "https://dev.salic.com/api";
+// const deployment_url = "https://localhost:3000";
+const deployment_url = "https://addin.salic.com";
 
 const AuthContext = React.createContext();
 export const AuthData = () => React.useContext(AuthContext);
 
 const AuthWrapper = () => {
-  const [user, setUser] = React.useState({ user: null, isAuthenticated: false });
+  const [user, setUser] = React.useState({ user: null, isAuthenticated: false, token: null });
   const [loading, setLoading] = React.useState(false);
   const [isRedirectPage, setIsRedirectPage] = React.useState(false);
 
   const login = async () => {
     let dialog;
     Office.context.ui.displayDialogAsync(
-      `https://login.microsoftonline.com/1741c0ca-0a6d-4fa5-aaff-8ab3efb324bd/oauth2/v2.0/authorize?client_id=bd6f08d2-4ccc-43a8-b4ae-f95a42b5f063&response_type=code&redirect_uri=${deployment_url}/taskpane.html&response_mode=query&scope=user.read%20Sites.Read.All&state=12345`,
+      `https://login.microsoftonline.com/bea1b417-4237-40b8-b020-57fce9abdb43/oauth2/v2.0/authorize?client_id=7226099e-6a81-415c-9cb4-99be43745d3a&response_type=code&redirect_uri=${deployment_url}/taskpane.html&response_mode=query&scope=user.read%20Sites.Read.All&state=12345`,
       { height: 90, width: 50 },
       function (asyncResult) {
         dialog = asyncResult.value;
@@ -44,10 +44,11 @@ const AuthWrapper = () => {
     const payload = {
       code: code,
       redirect_uri: `${deployment_url}/taskpane.html`,
-      client_id: "bd6f08d2-4ccc-43a8-b4ae-f95a42b5f063",
-      url: "https://login.microsoftonline.com/1741c0ca-0a6d-4fa5-aaff-8ab3efb324bd/oauth2/v2.0/token",
+      client_id: "7226099e-6a81-415c-9cb4-99be43745d3a",
+      url: "https://login.microsoftonline.com/bea1b417-4237-40b8-b020-57fce9abdb43/oauth2/v2.0/token",
       scope: "User.Read Sites.Read.All",
-      client_secret: "oiO8Q~fObKaPjYttULMpUY9EAAyoINFd~dPsYcoK",
+      // scope: "User.Read User.Read.All User.ReadBasic.All Sites.Read.All GroupMember.Read.All Group.Read.All Directory.Read.All",
+      client_secret: "Tds8Q~dvuLiqQIyMZ~4birzcMl_TEnlPIvgCxc85",
     };
     const res = await axios.post(`https://salicapi.com/api/user/GetAccessToken`, payload);
     return res;
@@ -59,15 +60,15 @@ const AuthWrapper = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       localStorage.setItem("salic-addin-auth-token", token);
       const currentuser = await axios.get("https://graph.microsoft.com/v1.0/me");
-      // const userData = await axios.get(`${apiUrl}/User/GetUserByEmail?Expand=manager&Email=${currentuser?.data?.mail}`);
-      console.log("currentuser: ", currentuser.data);
-      setUser({ user: currentuser.data, isAuthenticated: true });
+      // currentuser.data.mail = "akmal.eldahdouh@salic.com";
+      // currentuser.data.displayName = "Akmal Eldahdouh";
+      setUser({ user: currentuser.data, isAuthenticated: true, token: token });
       setLoading(false);
       return;
     }
     delete axios.defaults.headers.common["Authorization"];
     localStorage.removeItem("salic-addin-auth-token");
-    setUser({ user: null, isAuthenticated: false });
+    setUser({ user: null, isAuthenticated: false, token: null });
     setLoading(false);
   };
 
@@ -79,7 +80,7 @@ const AuthWrapper = () => {
   };
 
   const logout = () => {
-    setUser({ user: null, isAuthenticated: false });
+    setUser({ user: null, isAuthenticated: false, token: null });
     setAuthToken(false);
   };
 

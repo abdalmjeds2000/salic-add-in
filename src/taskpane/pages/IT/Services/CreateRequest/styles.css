@@ -1,0 +1,11 @@
+.jodit-toolbar-editor-collection {
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+}
+.jodit-toolbar-editor-collection::-webkit-scrollbar {
+  display: none;
+}
+.jodit-status-bar-link {
+  display: none;
+}

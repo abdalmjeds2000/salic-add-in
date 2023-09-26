@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FiSettings } from "react-icons/fi";
 import { Space } from "antd";
-import ServiceLabel from "../components/ServiceLabel";
+import ServiceLabel from "../components/ServiceLabel/ServiceLabel";
 
 const Home = () => {
   return (
