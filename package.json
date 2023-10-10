@@ -42,7 +42,7 @@
     "react-router-dom": "^5.3.4",
     "react-super-responsive-table": "^5.2.1",
     "regenerator-runtime": "^0.13.7",
-    "salic-react-components": "^0.9.74",
+    "salic-react-components": "^0.9.75",
     "style-loader": "^3.3.3"
   },
   "devDependencies": {
